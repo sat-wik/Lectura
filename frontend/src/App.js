@@ -9,7 +9,7 @@ const App = () => {
       <div className="app-container">
         <div className="sidebar">
           <div className="logo">
-            <img src="https://www.brandcrowd.com/maker/social/uqwgq49q42" alt="QuizForge Logo" />
+            <img src="https://github.com/sat-wik/QuizForge/blob/main/frontend/src/assets/Screenshot%202024-06-19%20at%202.08.51%E2%80%AFPM.png?raw=true" alt="QuizForge Logo" />
           </div>
           <ul>
             <li><Link to="/quizzes">Quizzes</Link></li>
