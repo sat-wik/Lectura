@@ -1,64 +1,93 @@
 .login-container {
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     height: 100vh;
+    padding: 0 200px; /* Provide padding to ensure content is centered */
     font-family: Arial, sans-serif;
-    background-color: #e6f1ff;
 }
 
-.form-container {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    margin-right: 20px; /* Adjust spacing between form and visual */
+.login-form {
+    padding: 2rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    margin-right: 20px; /* Space between the form and the image */
 }
 
-.form-container h1 {
-    margin-bottom: 20px;
-}
-
-.form-container form {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-container input {
+.login-form input[type="email"],
+.login-form input[type="password"] {
+    width: 94%;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 4px;
 }
 
-.form-container button {
+.login-btn {
+    width: 100%;
+    padding: 10px;
     background-color: #007bff;
     color: white;
-    padding: 10px;
     border: none;
-    border-radius: 5px;
+    border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    margin-top: 10px; /* Add margin for spacing */
+}
+
+.google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    color: #757575;
+    font-size: 14px;
+    height: 36px;
+    width: 100%;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.15);
+    cursor: pointer;
     margin-top: 10px;
 }
 
-.form-container button:hover {
-    background-color: #0056b3;
+.google-btn:hover {
+    box-shadow: 0 0 6px #4285f4;
 }
 
-.form-container a {
+.google-btn:active {
+    background-color: #e5e5e5;
+}
+
+.google-icon {
+    margin-right: 10px;
+    height: 20px;
+    width: auto;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.8rem;
+    margin-top: 10px;
+}
+
+.forgot-password {
     color: #007bff;
-    text-align: center;
+    text-decoration: none;
     display: block;
     margin-top: 20px;
 }
 
 .visual-container {
-    flex-grow: 1;
-    background-image: url('path_to_your_image_or_svg');
-    background-size: cover;
-    background-position: center;
-    border-radius: 10px;
+    flex: 1;
+    display: flex;
+    justify-content: flex-end; /* Aligns the image to the right */
+    align-items: center;
+    padding-left: 20%;
+}
+
+.visual-container img {
+    max-width: 120%;
+    max-height: 120%; /* Adjust the height as necessary */
 }
