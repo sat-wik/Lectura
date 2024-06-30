@@ -3,6 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
+import axios from 'axios';
 import '../styles/FileUpload.css';
 import IconButton from '@mui/material/IconButton';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -18,10 +19,11 @@ const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [fileContent, setFileContent] = useState('');
+  const [response, setResponse] = useState('');
 
   const onDrop = acceptedFiles => {
     const newFiles = acceptedFiles.map(file => ({
-      ...file,
+      file,
       id: URL.createObjectURL(file),
       preview: URL.createObjectURL(file),
       name: file.name,
@@ -93,6 +95,26 @@ const FileUpload = () => {
     return fileName;
   };
 
+  const handleUpload = async () => {
+    const formData = new FormData();
+    files.forEach(file => {
+      formData.append('files', file.file); // Append the actual File object
+    });
+
+    try {
+      const response = await axios.post('http://localhost:5000/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log('Files uploaded successfully:', response.data);
+      setResponse(response.data.data); // Set the response data to the state
+    } catch (error) {
+      console.error('Error uploading files:', error);
+      setResponse(`Error uploading files: ${error.message}`); // Set the error message to the state
+    }
+  };
+
   return (
     <div className="container">
       <div className="upload-section">
@@ -121,6 +143,7 @@ const FileUpload = () => {
           ))}
         </div>
       </div>
+      <button onClick={handleUpload} className="upload-button">Upload Files</button>
       <Modal
         open={Boolean(selectedFile)}
         onClose={handleClose}
@@ -163,6 +186,12 @@ const FileUpload = () => {
           )}
         </Box>
       </Modal>
+      {response && (
+        <div className="response-box">
+          <h3>Generated Quiz Questions:</h3>
+          <p>{response}</p>
+        </div>
+      )}
     </div>
   );
 };
