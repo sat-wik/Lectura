@@ -44,16 +44,11 @@ const bufferToGenerativePart = async (buffer, mimeType) => ({
 app.post('/upload', upload.array('files'), async (req, res) => {
   try {
     const files = req.files;
-    console.log('Files received:', files); // Log the files received for debugging
-    if (!files || files.length === 0) {
-      return res.status(400).json({ message: 'No files uploaded' });
-    }
-
     const parts = await Promise.all(
       files.map(file => bufferToGenerativePart(file.buffer, file.mimetype))
     );
 
-    const prompt = "Generate short quiz questions from the provided content and make it all multiple choice.";
+    const prompt = "Generate only multiple choice quiz questions from the provided content in JSON format with fields for question, answer choices, and correct answer.";
     const inputParts = [prompt, ...parts];
 
     const response = await model.generateContentStream(inputParts);
@@ -63,7 +58,9 @@ app.post('/upload', upload.array('files'), async (req, res) => {
       result += chunk.text();
     }
 
-    res.status(200).json({ message: 'Files processed successfully', data: result });
+    const jsonResponse = JSON.parse(result.replace(/```json|```/g, '').trim());
+
+    res.status(200).json({ message: 'Files processed successfully', data: jsonResponse });
   } catch (error) {
     console.error('Error processing files:', error);
     res.status(500).json({ message: 'Error processing files', error: error.message });

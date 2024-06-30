@@ -4,6 +4,7 @@ import { auth } from './firebase-config';
 import FileUpload from './components/FileUpload';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
+import Quizzes from './components/Quizzes';
 import './styles/App.css';
 
 // Create a context for authentication state
@@ -55,7 +56,7 @@ const AppContent = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/" element={user ? <Navigate to="/quizzes" /> : <Navigate to="/login" />} />
-          <Route path="/quizzes" element={user ? <div>Quizzes Content</div> : <Navigate to="/login" />} />
+          <Route path="/quizzes" element={user ? <Quizzes /> : <Navigate to="/login" />} />
           <Route path="/lectures" element={user ? <div>Lectures Content</div> : <Navigate to="/login" />} />
           <Route path="/tests" element={user ? <div>Tests Content</div> : <Navigate to="/login" />} />
           <Route path="/file-upload" element={user ? <FileUpload /> : <Navigate to="/login" />} />

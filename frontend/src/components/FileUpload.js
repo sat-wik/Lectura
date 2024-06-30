@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDropzone } from 'react-dropzone';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
@@ -19,7 +20,8 @@ const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [fileContent, setFileContent] = useState('');
-  const [response, setResponse] = useState('');
+  const [response, setResponse] = useState([]);
+  const navigate = useNavigate();
 
   const onDrop = acceptedFiles => {
     const newFiles = acceptedFiles.map(file => ({
@@ -108,10 +110,10 @@ const FileUpload = () => {
         },
       });
       console.log('Files uploaded successfully:', response.data);
-      setResponse(response.data.data); // Set the response data to the state
+      setResponse(response.data.data); // Save response data
+      navigate('/quizzes', { state: { quizQuestions: response.data.data } }); // Navigate to quizzes page
     } catch (error) {
       console.error('Error uploading files:', error);
-      setResponse(`Error uploading files: ${error.message}`); // Set the error message to the state
     }
   };
 
@@ -186,12 +188,6 @@ const FileUpload = () => {
           )}
         </Box>
       </Modal>
-      {response && (
-        <div className="response-box">
-          <h3>Generated Quiz Questions:</h3>
-          <p>{response}</p>
-        </div>
-      )}
     </div>
   );
 };
