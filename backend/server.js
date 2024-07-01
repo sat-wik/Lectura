@@ -48,7 +48,7 @@ app.post('/upload', upload.array('files'), async (req, res) => {
       files.map(file => bufferToGenerativePart(file.buffer, file.mimetype))
     );
 
-    const prompt = "Generate only multiple choice quiz questions from the provided content in JSON format with fields for question, answer choices, and correct answer.";
+    const prompt = "Generate only multiple choice quiz questions from the provided content in JSON format with fields for question, answer choices, and correct answer. Ensure that the questions are different from the provided material and that every question has either a true/false answer or a mutiple choice answer.";
     const inputParts = [prompt, ...parts];
 
     const response = await model.generateContentStream(inputParts);

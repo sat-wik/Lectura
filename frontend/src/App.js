@@ -35,19 +35,23 @@ const AppContent = () => {
 
   const showSidebar = user && !['/login', '/signup'].includes(location.pathname);
 
+  const getLinkClass = (path) => {
+    return location.pathname === path ? 'active' : '';
+  };
+
   return (
     <div className="app-container">
       {showSidebar && (
         <div className="sidebar">
           <div className="logo">
-            <img src="https://github.com/sat-wik/QuizForge/blob/main/frontend/src/assets/QuizForge_transparent.png?raw=true" alt="QuizForge Logo" />
+            <img src="https://github.com/sat-wik/QuizForce/blob/main/frontend/src/assets/QuizForce.png?raw=true" alt="QuizForge Logo" />
           </div>
           <ul>
-            <li><Link to="/quizzes">Quizzes</Link></li>
-            <li><Link to="/lectures">Lectures</Link></li>
-            <li><Link to="/tests">Tests</Link></li>
-            <li><Link to="/file-upload">File Upload</Link></li>
-            <li><Link to="/coding">Coding</Link></li>
+            <li className={getLinkClass('/quizzes')}><Link to="/quizzes">Quizzes</Link></li>
+            <li className={getLinkClass('/lectures')}><Link to="/lectures">Lectures</Link></li>
+            <li className={getLinkClass('/tests')}><Link to="/tests">Tests</Link></li>
+            <li className={getLinkClass('/file-upload')}><Link to="/file-upload">File Upload</Link></li>
+            <li className={getLinkClass('/coding')}><Link to="/coding">Coding</Link></li>
           </ul>
         </div>
       )}

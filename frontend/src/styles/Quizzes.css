@@ -25,7 +25,7 @@
 
 .quiz-controls {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 }
 
 .quiz-controls button {
@@ -40,4 +40,21 @@
 .quiz-controls button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+
+.result {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.result.correct {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.result.incorrect {
+  background-color: #f8d7da;
+  color: #721c24;
 }

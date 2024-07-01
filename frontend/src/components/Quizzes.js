@@ -8,6 +8,11 @@ const Quizzes = () => {
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState('');
+  const [showResult, setShowResult] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [answerSubmitted, setAnswerSubmitted] = useState(false);
+  const [score, setScore] = useState(0);
+  const [quizCompleted, setQuizCompleted] = useState(false);
 
   const handleAnswerChange = (e) => {
     setSelectedAnswer(e.target.value);
@@ -15,11 +20,38 @@ const Quizzes = () => {
 
   const handleNextQuestion = () => {
     setSelectedAnswer('');
+    setShowResult(false);
+    setIsCorrect(false);
+    setAnswerSubmitted(false);
     setCurrentQuestionIndex((prevIndex) => Math.min(prevIndex + 1, quizQuestions.length - 1));
+  };
+
+  const handleSubmit = () => {
+    const currentQuestion = quizQuestions[currentQuestionIndex];
+    const isAnswerCorrect = selectedAnswer === currentQuestion.correct_answer;
+    setIsCorrect(isAnswerCorrect);
+    setShowResult(true);
+    setAnswerSubmitted(true);
+    if (isAnswerCorrect) {
+      setScore((prevScore) => prevScore + 1);
+    }
+  };
+
+  const handleFinishQuiz = () => {
+    setQuizCompleted(true);
   };
 
   if (quizQuestions.length === 0) {
     return <div>No quiz questions available</div>;
+  }
+
+  if (quizCompleted) {
+    return (
+      <div className="quiz-container">
+        <h3>Quiz Completed!</h3>
+        <p>Your score is: {score} out of {quizQuestions.length}</p>
+      </div>
+    );
   }
 
   const currentQuestion = quizQuestions[currentQuestionIndex];
@@ -38,6 +70,7 @@ const Quizzes = () => {
                 value={choice}
                 checked={selectedAnswer === choice}
                 onChange={handleAnswerChange}
+                disabled={answerSubmitted}
               />
               {choice}
             </label>
@@ -45,10 +78,24 @@ const Quizzes = () => {
         ))}
       </div>
       <div className="quiz-controls">
-        <button onClick={handleNextQuestion} disabled={currentQuestionIndex >= quizQuestions.length - 1}>
-          Next
-        </button>
+        <button onClick={handleSubmit} disabled={!selectedAnswer || showResult}>Submit</button>
+        {showResult && (
+          <>
+            {currentQuestionIndex < quizQuestions.length - 1 ? (
+              <button onClick={handleNextQuestion} disabled={!answerSubmitted || currentQuestionIndex >= quizQuestions.length - 1}>
+                Next
+              </button>
+            ) : (
+              <button onClick={handleFinishQuiz}>Finish Quiz</button>
+            )}
+          </>
+        )}
       </div>
+      {showResult && (
+        <div className={`result ${isCorrect ? 'correct' : 'incorrect'}`}>
+          {isCorrect ? 'Correct!' : `Incorrect! The correct answer is ${currentQuestion.correct_answer}.`}
+        </div>
+      )}
     </div>
   );
 };
