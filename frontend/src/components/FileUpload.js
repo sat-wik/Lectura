@@ -20,7 +20,6 @@ const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [fileContent, setFileContent] = useState('');
-  const [response, setResponse] = useState([]);
   const navigate = useNavigate();
 
   const onDrop = acceptedFiles => {
@@ -110,7 +109,6 @@ const FileUpload = () => {
         },
       });
       console.log('Files uploaded successfully:', response.data);
-      setResponse(response.data.data); // Save response data
       navigate('/quizzes', { state: { quizQuestions: response.data.data } }); // Navigate to quizzes page
     } catch (error) {
       console.error('Error uploading files:', error);

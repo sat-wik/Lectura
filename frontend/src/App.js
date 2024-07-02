@@ -1,57 +1,63 @@
-import React, { useEffect, useState, createContext, useContext } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, Link } from 'react-router-dom';
+import React, { useState, useEffect, createContext } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate, Link, useLocation } from 'react-router-dom';
 import { auth } from './firebase-config';
 import FileUpload from './components/FileUpload';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import Quizzes from './components/Quizzes';
+import Quiz from './components/Quiz';
 import './styles/App.css';
 
-// Create a context for authentication state
-const AuthContext = createContext();
+// Create a context for quiz state
+export const QuizContext = createContext();
 
 const App = () => {
   const [user, setUser] = useState(null);
+  const [quizzes, setQuizzes] = useState([]);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(user => {
       setUser(user);
+      if (user) {
+        fetchQuizzes();
+      }
     });
     return unsubscribe;
   }, []);
 
+  const fetchQuizzes = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/quizzes');
+      const data = await response.json();
+      setQuizzes(data.quizzes);
+    } catch (error) {
+      console.error('Error fetching quizzes:', error);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={user}>
+    <QuizContext.Provider value={{ quizzes, setQuizzes, fetchQuizzes }}>
       <Router>
-        <AppContent />
+        <AppContent user={user} />
       </Router>
-    </AuthContext.Provider>
+    </QuizContext.Provider>
   );
 };
 
-const AppContent = () => {
-  const user = useContext(AuthContext);
+const AppContent = ({ user }) => {
   const location = useLocation();
-
   const showSidebar = user && !['/login', '/signup'].includes(location.pathname);
-
-  const getLinkClass = (path) => {
-    return location.pathname === path ? 'active' : '';
-  };
 
   return (
     <div className="app-container">
       {showSidebar && (
         <div className="sidebar">
           <div className="logo">
-            <img src="https://github.com/sat-wik/QuizForce/blob/main/frontend/src/assets/QuizForce.png?raw=true" alt="QuizForge Logo" />
+            <img src="https://github.com/sat-wik/QuizForce/blob/main/frontend/src/assets/QuizForce.png?raw=true" alt="QuizForce Logo" />
           </div>
           <ul>
-            <li className={getLinkClass('/quizzes')}><Link to="/quizzes">Quizzes</Link></li>
-            <li className={getLinkClass('/lectures')}><Link to="/lectures">Lectures</Link></li>
-            <li className={getLinkClass('/tests')}><Link to="/tests">Tests</Link></li>
-            <li className={getLinkClass('/file-upload')}><Link to="/file-upload">File Upload</Link></li>
-            <li className={getLinkClass('/coding')}><Link to="/coding">Coding</Link></li>
+            <li><Link to="/quizzes">Quizzes</Link></li>
+            <li><Link to="/file-upload">File Upload</Link></li>
           </ul>
         </div>
       )}
@@ -61,10 +67,8 @@ const AppContent = () => {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/" element={user ? <Navigate to="/quizzes" /> : <Navigate to="/login" />} />
           <Route path="/quizzes" element={user ? <Quizzes /> : <Navigate to="/login" />} />
-          <Route path="/lectures" element={user ? <div>Lectures Content</div> : <Navigate to="/login" />} />
-          <Route path="/tests" element={user ? <div>Tests Content</div> : <Navigate to="/login" />} />
+          <Route path="/quizzes/:id" element={user ? <Quiz /> : <Navigate to="/login" />} />
           <Route path="/file-upload" element={user ? <FileUpload /> : <Navigate to="/login" />} />
-          <Route path="/coding" element={user ? <div>Coding Content</div> : <Navigate to="/login" />} />
         </Routes>
       </div>
     </div>
